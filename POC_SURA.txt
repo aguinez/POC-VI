@@ -1,0 +1,50 @@
+CREDENCIALES CLOUDSHELL
+
+export GOOGLE_APPLICATION_CREDENTIALS=/home/alex/sura-poc-analisis-de-sueno-8dc1ec19d207.json
+
+
+VIDEO INTELLIGENCE API
+
+curl -X POST \
+     -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
+     -H "Content-Type: application/json; charset=utf-8" \
+     --data '{
+      "inputUri": "gs://raw-video-files-89guyjhb5/VID-20190814-WA0031/VID-20190814-WA0031.mp4",
+      "features": ["SPEECH_TRANSCRIPTION"],
+      "videoContext": {
+        "speechTranscriptionConfig": {
+          "languageCode": "es-cl",
+          "enableAutomaticPunctuation": true,
+          "filterProfanity":  false,
+          "enableSpeakerDiarization": true
+        }
+      }
+    }' "https://videointelligence.googleapis.com/v1/videos:annotate"
+
+curl -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
+  https://videointelligence.googleapis.com/v1/projects/352753003942/locations/us-west1/operations/4550728860566616578
+
+
+
+
+VISION API
+
+curl -X POST \
+     -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
+     -H "Content-Type: application/json; charset=utf-8" \
+  --data '{
+  "requests": [
+    {
+      "image": {
+        "source": {
+          "gcsImageUri": "gs://raw-video-files-89guyjhb5/VID-20190814-WA0032/expresion3.png"
+        }
+      },
+      "features": [
+        {
+          "type": "FACE_DETECTION"
+        }
+      ]
+    }
+  ]
+}' "https://vision.googleapis.com/v1/images:annotate"
